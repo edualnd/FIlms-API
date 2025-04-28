@@ -5,12 +5,11 @@ addBtn.addEventListener('click', ()=>{
 })
 const library = async () => {
     cardList.innerHTML = ''
-    await fetch('http://localhost:3000/list')
-    .then(res => res.json())
-    .then(data => {
-        data.forEach(element => {
-            const id = element.title.replaceAll(' ','')
-            const idControls = id+'Controls'
+    const res = await fetch('http://localhost:3000/film/list')
+    const data = await res.json()
+        data.films.map(element => {
+            const id = element._id
+            const idControls = element._id
             const exist = document.getElementById(id)
             if(exist == null){
             cardList.innerHTML += `<div class="card" id='${id}'>
@@ -32,10 +31,9 @@ const library = async () => {
             }
         });
         
-    })
+    
 }
 
-library()
 
 function openModal(id){
     const modal = document.getElementById(id)
@@ -77,7 +75,7 @@ async function addCard(event){
         description: descriptionValue
     }
     const apiPost = async () => {
-        await fetch('http://localhost:3000/create', {
+        await fetch('http://localhost:3000/film/', {
         method: 'POST',
         headers:{
             'Content-Type': 'application/json'
@@ -119,7 +117,7 @@ function cardData(event){
         closeModal('updateFilm')
         const apiPut = async () => {
         const find = oldData.title.textContent
-        await fetch(`http://localhost:3000/update/${find}`, {
+        await fetch(`http://localhost:3000/film/${find}`, {
             method: 'PUT',
             headers:{
                 'Content-Type': 'application/json'
@@ -156,7 +154,7 @@ async function deleteCard(id){
     const card = document.getElementById(id)
     const find = card.querySelector('.info p:first-of-type span').textContent
     const apiDelete = async () => {
-        await fetch(`http://localhost:3000/delete/${find}`, {
+        await fetch(`http://localhost:3000/film/${find}`, {
             method: 'DELETE',
             headers:{
                 'Content-Type': 'application/json'
